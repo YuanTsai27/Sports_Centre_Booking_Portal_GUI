@@ -12,81 +12,58 @@ import java.io.IOException;
  */
 public class Page_Login extends Page {
 
-    private CUI_Login cui;
+    private GUI_Login gui;
+    private User userToLogin;
 
     public Page_Login() {
         super();
-        this.cui = new CUI_Login();
+        this.gui = new GUI_Login(this);
     }
 
     public User main() throws IOException {
-        cui.pageWelcome();
-        String response;
-
-        // loop to keep prompting the user
-        while (true) {
-            response = cui.askLogin();
-
-            if (response.equalsIgnoreCase("x")) {
-                cui.exitApp(); // display final message before exiting
-                return null;
-            } else if (response.equalsIgnoreCase("register")) {
-                Register();
-            } else {
-                User user = Login(response);
-                if (user != null) {
-                    return user;
-                }
-            }
-
+   
+        // show GUI upon login page activation.
+        gui.setVisible(true);
+        
+        while(gui.isVisible()){
+            if (userToLogin != null)
+                return userToLogin;
         }
+        
+        // if GUI closed without loggin in
+        return null;
+    }
+    
+    public void Quit(){
+        gui.setVisible(false);
     }
 
-    private User Login(String username) {
-        String password = cui.askPassword(username);
+    public boolean Login(String username, String password) {
 
         for (User user : usersList) {
             if (user.getUsername().equalsIgnoreCase(username) && user.getPassword().equals(password)) {
-                cui.loginSuccess();
-                return user;
+                userToLogin = user;
+                return true;
             }
         }
 
-        cui.loginFailure();
-        return null;
+        return false;
     }
 
-    private void Register() throws IOException {
+    public boolean Register(String newUsername, String firstName, String lastName, String newPassword) throws IOException {
 
-        boolean usernameExists = false;
-
-        while (true) {  // loop to prompt continuously for a new unique username
-            String newUsername = cui.registerUsername();
-
-            if (newUsername.equalsIgnoreCase("x")) {
-                break;  // exit back to login page
-            }
-
-            for (User user : usersList) {
-                if (user.getUsername().equalsIgnoreCase(newUsername)) {
-                    usernameExists = true;
-                    break;
-                }
-            }
-
-            if (usernameExists) {
-                cui.registrationFailure();
-            } else {
-                String firstName = cui.registerFirstName();
-                String lastName = cui.registerLastName();
-                String newPassword = cui.registerPassword();
-                
-                User newUser = new User(newUsername, firstName, lastName, newPassword);
-                usersList.add(newUser);
-                fileManager.saveUsers(usersList); //add new user into users.txt
-                cui.registrationSuccess();
-                break; // exit register loop after successful registration
+        // check if the username already exists
+        for (User user : usersList) {
+            if (user.getUsername().equalsIgnoreCase(newUsername)) {
+                return false;
             }
         }
+
+        // if username does not already exist, register new user
+        User newUser = new User(newUsername, firstName, lastName, newPassword);
+        usersList.add(newUser);
+        fileManager.saveUsers(usersList); //add new user into users.txt
+
+        return true;
     }
 }
