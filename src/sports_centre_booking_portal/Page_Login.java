@@ -14,30 +14,62 @@ public class Page_Login extends Page {
 
     private GUI_Login gui;
     private User userToLogin;
+    //private boolean transitionToHome;
+    private PageNavigator pageNav;
 
-    public Page_Login() {
+    public Page_Login(PageNavigator pageNav) {
         super();
+        this.pageNav = pageNav;
         this.gui = new GUI_Login(this);
     }
 
-    public User main() throws IOException {
-   
+    public void main() throws IOException {
+        //transitionToHome = false;
+        userToLogin = null;
+
         // show GUI upon login page activation.
         gui.setVisible(true);
-        
-        while(gui.isVisible()){
-            if (userToLogin != null)
+
+        /*
+        while (gui.isVisible()) {
+            if (userToLogin != null) {
+                //gui.setVisible(false);
                 return userToLogin;
+            }
         }
-        
+
+        if (transitionToHome) {
+            return userToLogin;
+        }
+
         // if GUI closed without loggin in
         return null;
-    }
-    
-    public void Quit(){
-        gui.setVisible(false);
+        */
     }
 
+    public void transitionHome() {
+        //gui.setVisible(false);
+        //transitionToHome = true;
+        gui.dispose(); // close the login GUI
+        pageNav.showHomePage(userToLogin);
+    }
+
+    public void Quit() {
+        // gui.setVisible(false);
+
+        gui.dispose();
+        System.exit(0);
+    }
+    
+    public User getUserToLogin(){
+        return userToLogin;
+    }
+
+    /*
+    public boolean getExitFlag(){
+        return exit;
+    }
+     */
     public boolean Login(String username, String password) {
 
         for (User user : usersList) {

@@ -7,6 +7,9 @@ package sports_centre_booking_portal;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,8 +38,8 @@ public class GUI_Home extends JFrame {
 
     private void setupUI() {
         setTitle("Sports Centre Booking Portal - Home");
-        setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);  
 
         setLayout(new GridLayout(6, 1, 10, 10));
@@ -87,7 +90,11 @@ public class GUI_Home extends JFrame {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                pageHome.logOut();
+                try {
+                    pageHome.logOut();
+                } catch (IOException ex) {
+                    Logger.getLogger(GUI_Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         add(logoutButton);

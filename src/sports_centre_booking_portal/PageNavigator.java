@@ -13,20 +13,23 @@ import java.io.IOException;
 public class PageNavigator {
     // class that exclusively handles transitioning the user's interface from one page to another (login page, home page, booking page)
 
+    private User currentUser;
     private Page_Booking bookingPage;
     private Page_Home homePage;
     private Page_Login loginPage;
     private boolean exit;
 
     public PageNavigator() {
-        this.bookingPage = new Page_Booking();
-        this.homePage = new Page_Home();
-        this.loginPage = new Page_Login();
+        this.bookingPage = new Page_Booking(this);
+        this.homePage = new Page_Home(this);
+        this.loginPage = new Page_Login(this);
+        currentUser = null;
         this.exit = false;
     }
 
     public void start() throws IOException {
 
+        /*
         User currentUser = null;
 
         while (!exit) {
@@ -48,7 +51,25 @@ public class PageNavigator {
                 }
             }
         }
+*/
+        showLoginPage();
+        
 
+    }
+    
+    public void showLoginPage() throws IOException{
+        currentUser = null;
+        loginPage.main();
+    }
+    
+    public void showHomePage(User user){
+        currentUser = user;
+        homePage.main(currentUser);
+    }
+    
+    public void showBookingPage(User user){
+        currentUser = user;
+        bookingPage.main(currentUser);
     }
 
 }

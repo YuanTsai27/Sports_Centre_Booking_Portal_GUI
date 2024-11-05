@@ -27,7 +27,5 @@ public class UserAdmin extends User {
         // Admin users does not pay to book courts.
         return true;
     }
-    
-    // additional admin control methods goes here. etc promote member to staff. change court price 
 }
 

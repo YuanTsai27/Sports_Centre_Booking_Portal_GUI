@@ -41,8 +41,8 @@ public class GUI_Login extends JFrame {
     private void setUpGUI() {
 
         setTitle("Sports Centre Booking Portal - Login Page");
-        setSize(400, 400);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(600, 400);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
         // GUI components set up
@@ -64,7 +64,7 @@ public class GUI_Login extends JFrame {
         resetButton = new JButton("Cancel");
         panel.add(resetButton);
         registerButton = new JButton("Register");
-        panel.add(quitButton);
+        panel.add(registerButton);
         quitButton = new JButton("Quit");
         panel.add(quitButton);
 
@@ -114,9 +114,14 @@ public class GUI_Login extends JFrame {
         if (!loginSuccess) {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
         } else {
-            handleQuit();
+            pageLogin.transitionHome();
+            handleReset();
         }
 
+    }
+    
+    private void handleTransitionToHome(){
+        pageLogin.transitionHome();
     }
 
     private void handleQuit() {

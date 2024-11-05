@@ -4,6 +4,7 @@
  */
 package sports_centre_booking_portal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -15,22 +16,29 @@ public class Page_Home extends Page {
 
     private GUI_Home gui;
     private User currentUser;
-    private boolean logout;
-    private boolean navigateBook;
+    //private boolean logout;
+    //private boolean navigateBook;
+    private PageNavigator pageNav;
 
-    public Page_Home() {
+    public Page_Home(PageNavigator pageNav) {
         super();
         this.gui = new GUI_Home(this);
+        this.pageNav = pageNav;
         currentUser = null;
     }
 
-    public String main(User currentUser) {
-        logout = false;
-        navigateBook = false;
+    public void main(User currentUser) {
+        this.currentUser = currentUser;
+        //logout = false;
+       // navigateBook = false;
+
+        // update GUI with user's info
+        gui.displayWelcomeMessage(currentUser.getFirstName() + " " + currentUser.getLastName(), currentUser.getAccBalance());
 
         // show GUI upon login page activation.
         gui.setVisible(true);
 
+        /*
         while (gui.isVisible()) {
             if (logout) {
                 return "x";
@@ -41,17 +49,23 @@ public class Page_Home extends Page {
         }
         // if GUI closed manually
         return "x";
+        */
 
     }
 
-    public void logOut() {
-        logout = true;
-        gui.setVisible(false);
+    public void logOut() throws IOException {
+        //logout = true;
+        //gui.setVisible(false);
+        
+        gui.dispose(); // close the home GUI
+        pageNav.showLoginPage();
     }
 
     public void book() {
-        navigateBook = true;
-        gui.setVisible(false);
+        //navigateBook = true;
+        //gui.setVisible(false);
+        gui.dispose(); // close the home GUI
+        pageNav.showBookingPage(currentUser);
     }
 
     public void handleTopUp() {
@@ -91,10 +105,10 @@ public class Page_Home extends Page {
 
         JOptionPane.showMessageDialog(gui, bookingsInfo.toString(), "My Bookings", JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
     public String timeConvertTo12h(int time) {
         // function only works for time increments of 30 mins. 4:30pm = 1650
-        
+
         int hour = time / 100;
         int minutes = time % 100;
         String period = " ";
@@ -109,7 +123,7 @@ public class Page_Home extends Page {
         // Convert to 12-hour format
         hour = (hour == 0) ? 12 : (hour > 12) ? hour - 12 : hour;
 
-        if (minutes != 0){
+        if (minutes != 0) {
             minutes = 30;
         }
         // Format minutes as two digits
@@ -119,14 +133,14 @@ public class Page_Home extends Page {
         return hour + ":" + minutesStr + " " + period;
 
     }
-    
+
     public void checkCourtAvailability() {
         String courtNumberInput = JOptionPane.showInputDialog(gui, "Enter court number to check availability:");
         if (courtNumberInput != null) {
             try {
                 int courtNumber = Integer.parseInt(courtNumberInput);
                 Court court = findCourtByNumber(courtNumber);
-                
+
                 if (court != null) {
                     ArrayList<Booking> courtBookings = getCourtBookings(court);
                     displayCourtAvailability(court, courtBookings);
@@ -160,7 +174,7 @@ public class Page_Home extends Page {
 
     private void displayCourtAvailability(Court court, ArrayList<Booking> courtBookings) {
         StringBuilder availability = new StringBuilder("Court " + court.getCourtNum() + " Availability:\n");
-        
+
         for (int time = openTime; time < closeTime; time += minTimeIncrement) {
             String timeStr = timeConvertTo12h(time);
             String status = "FREE";

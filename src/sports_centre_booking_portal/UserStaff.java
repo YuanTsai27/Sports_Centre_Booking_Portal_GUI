@@ -35,6 +35,5 @@ public class UserStaff extends User {
         return true;
     }
     
-    
-    // additional staff control methods goes here. cancel booking, reschedule booking. 
+   
 }
