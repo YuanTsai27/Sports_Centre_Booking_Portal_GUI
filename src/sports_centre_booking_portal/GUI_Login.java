@@ -35,6 +35,10 @@ public class GUI_Login extends JFrame {
 
     public GUI_Login(Page_Login pageLogin) {
         this.pageLogin = pageLogin;
+        setUpGUI();
+    }
+
+    private void setUpGUI() {
 
         setTitle("Sports Centre Booking Portal - Login Page");
         setSize(400, 400);
@@ -155,7 +159,6 @@ public class GUI_Login extends JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Username already exists");
             }
-            
 
         }
     }

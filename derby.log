@@ -1,0 +1,18 @@
+Tue Nov 05 01:11:57 NZDT 2024 : Apache Derby Network Server - 10.14.2.0 - (1828579) started and ready to accept connections on port 1527
+----------------------------------------------------------------
+Tue Nov 05 01:11:58 NZDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0192-f716-c5f8-ffff88bc49dc 
+on database directory /Users/yuantsai/NetBeansProjects/Sports_Centre_Booking_Portal/SportsCentreBookingPortal_DB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@277050dc 
+Loaded from file:/Users/yuantsai/Desktop/db-derby-10.14.2.0-bin/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.23+7-LTS-222
+user.dir=/Users/yuantsai/Desktop/db-derby-10.14.2.0-bin
+os.name=Mac OS X
+os.arch=aarch64
+os.version=14.5
+derby.system.home=/Users/yuantsai/NetBeansProjects/Sports_Centre_Booking_Portal
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue Nov 05 01:11:58 NZDT 2024:
+Shutting down instance a816c00e-0192-f716-c5f8-ffff88bc49dc on database directory /Users/yuantsai/NetBeansProjects/Sports_Centre_Booking_Portal/SportsCentreBookingPortal_DB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@277050dc 
+Tue Nov 05 01:11:58 NZDT 2024 Thread[DRDAConnThread_3,5,main] (DATABASE = SportsCentreBookingPortal_DB), (DRDAID = {2}), Database 'SportsCentreBookingPortal_DB' shutdown.

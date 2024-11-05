@@ -5,6 +5,7 @@
 package sports_centre_booking_portal;
 
 import java.util.HashSet;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,184 +13,70 @@ import java.util.HashSet;
  */
 public class Page_Booking extends Page {
 
-    private CUI_Booking cui;
+    private GUI_Booking gui;
+    private User currentUser;
 
     public Page_Booking() {
         super();
-        this.cui = new CUI_Booking();
+        this.gui = new GUI_Booking(this);
+        currentUser = null;
     }
+    
+    
 
     public void main(User currentUser) {
-
-        cui.pageWelcome();
-
-        boolean exit = false;
-
-        while (!exit) {
-            HashSet<Court> selectedCourts = new HashSet<>();
-            boolean courtsValid = true;
-            boolean userConfirmed = false;
-            boolean courtsAvailable = true;
-            int startTime = 0;
-            int endTime = 0;
-            double totalPrice = 0;
-
-            while (!exit) {
-
-                // ask court number(s)
-                String courtInput = cui.askCourtNum();
-                if (courtInput.equalsIgnoreCase("X")) {
-                    exit = true;
-                    break;
-                }
-
-                // validate court numbers response
-                String[] courtNumbers = courtInput.split("\\s+");
-                for (String courtNumStr : courtNumbers) {
-                    Court court = isValidCourt(courtNumStr);
-                    if (court != null) {
-                        selectedCourts.add(court);
-                        courtsValid = true;
-                    } else {
-                        cui.promptTryAgainCourts();
-                        courtsValid = false;
-                        break;
-                    }
-                }
-
-                if (courtsValid) {
-                    break;
-                }
-            }
-
-            while (!exit) {
-                boolean numValid1 = false;
-                boolean numValid2 = false;
-                // Ask for start time
-                String startTimeStr = cui.askStartTime();
-                if (startTimeStr.equalsIgnoreCase("X")) {
-                    exit = true;
-                    break;
-                }
-
-                // validate input 
-                try {
-                    startTime = Integer.parseInt(startTimeStr);
-                    numValid1 = true;
-
-                } catch (NumberFormatException e) {
-                    cui.invalidInput();
-                }
-
-                if (numValid1) {
-
-                    // Ask for end time
-                    String endTimeStr = cui.askEndTime();
-                    if (endTimeStr.equalsIgnoreCase("X")) {
-                        exit = true;
-                        break;
-                    }
-
-                    // validate input 
-                    try {
-                        endTime = Integer.parseInt(endTimeStr);
-                        numValid2 = true;
-
-                    } catch (NumberFormatException e) {
-                        cui.invalidInput();
-                    }
-
-                }
-
-                if (numValid1 && numValid2) {
-                    // Check if the time and duration are valid
-                    if (!isValidTime(startTime, endTime)) {
-                        cui.promptTryAgainTime1();
-                    } else if (!isValidDuration(startTime, endTime)) {
-                        cui.promptTryAgainTime2(startTime, endTime);;
-                    } else {
-                        break;
-                    }
-
-                }
-
-            }
-            if (!exit) {
-                // check court availability 
-                for (Court court : selectedCourts) {
-                    if (!isCourtAvailable(court, startTime, endTime)) {
-                        courtsAvailable = false;
-                        break;
-                    }
-                }
-
-                if (!courtsAvailable) {
-                    cui.promptTryAgainCourtsUnavailable();
-                } else {
-                    // calculate total price based on selected courts and duration
-
-                    int duration = (endTime - startTime) / 100; // in hours
-                    for (Court court : selectedCourts) {
-                        totalPrice += court.getBasePrice() * duration;
-                    }
-                }
-
-                if (!exit && courtsAvailable) {
-
-                    while (!exit) {
-                        // display price and ask for confirmation
-                        String confirmation = cui.displayPrice(totalPrice);
-                        if (confirmation.equalsIgnoreCase("X")) {
-                            exit = true;
-                            break;
-                        } else if (confirmation.equalsIgnoreCase("no")) {
-                            cui.bookingNegated();
-                            break;
-
-                        } else if (confirmation.equalsIgnoreCase("yes")) {
-                            userConfirmed = true;
-                            break;
-
-                        } else {
-                            cui.invalidInput();
-                        }
-
-                    }
-                }
-
-                if (!exit && courtsAvailable && userConfirmed) {
-                    // check user balance then proceed with booking
-
-                    if (currentUser.bookCourt(totalPrice)) {
-                        Booking booking = new Booking(currentUser.getId(), currentUser, startTime, endTime, currentUser.convertPrice(totalPrice), selectedCourts);
-                        currentUser.addBooking(booking);
-                        bookingsList.add(booking);
-                        cui.bookingSuccessful(currentUser, booking);
-
-                        // ask if user wants to make another booking
-                        while (!exit) {
-                            String anotherBooking = cui.askAnotherBooking();
-                            if (anotherBooking.equalsIgnoreCase("no")) {
-                                exit = true;
-                                break;
-                            } else if (anotherBooking.equalsIgnoreCase("yes")) {
-                                break;
-                            } else {
-                                cui.invalidInput();
-                            }
-                        }
-
-                    } else {
-                        cui.bookingUnsuccessful();
-                    }
-
-                }
-
-            }
+        this.currentUser = currentUser;
+        
+        // show GUI upon login page activation.
+        gui.setVisible(true);
+        
+        while(gui.isVisible()){
         }
+        
+        // quit if GUI closed.
+        return;
+        
+    }
+    
+    public void processBooking(String courts, int startTime, int endTime){
+        // validate court numbers and availability
+        HashSet<Court> selectedCourts = validateCourts(courts);
 
+        if (selectedCourts != null && !selectedCourts.isEmpty()) {
+            // Calculate price and update GUI
+            double totalPrice = calculatePrice(selectedCourts, startTime, endTime);
+            gui.updateTotalPrice(totalPrice);
+
+            // Confirm booking
+            boolean confirmed = confirmBooking(selectedCourts, startTime, endTime, totalPrice);
+            if (confirmed) {
+                JOptionPane.showMessageDialog(gui, "Booking Confirmed!");
+            } else {
+                JOptionPane.showMessageDialog(gui, "Booking Failed.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(gui, "Invalid court selection.");
+        }
     }
 
+    private HashSet<Court> validateCourts(String courts) {
+        // Convert the input court string to a HashSet of Court objects (pseudo-code)
+        HashSet<Court> courtSet = new HashSet<>();
+        // Parse courts and validate each court, adding to courtSet if valid
+        return courtSet; // Return validated set or null if invalid
+    }
+
+    private double calculatePrice(HashSet<Court> courts, int startTime, int endTime) {
+        // Implement price calculation logic
+        return courts.size() * (endTime - startTime) * 10; // Sample pricing logic
+    }
+
+    private boolean confirmBooking(HashSet<Court> courts, int startTime, int endTime, double price) {
+        // Confirm booking and update system records
+        return true; // Placeholder confirmation
+    }
+    
+/*
     private Court isValidCourt(String courtNum) {
 
         try {
@@ -233,4 +120,5 @@ public class Page_Booking extends Page {
         return true;
 
     }
+*/
 }
