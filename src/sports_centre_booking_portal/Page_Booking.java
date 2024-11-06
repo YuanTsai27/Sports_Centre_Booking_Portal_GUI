@@ -56,7 +56,7 @@ public class Page_Booking extends Page {
         return false;
     }
 
-    private boolean isValidTime(int startTime, int endTime) {
+    public boolean isValidTime(int startTime, int endTime) {
 
         if (startTime >= openTime && endTime <= closeTime) {
             return true;
@@ -66,7 +66,7 @@ public class Page_Booking extends Page {
         return false;
     }
 
-    private boolean isValidDuration(int startTime, int endTime) {
+    public boolean isValidDuration(int startTime, int endTime) {
 
         if ((endTime - startTime) >= minDuration && (endTime - startTime) % minTimeIncrement == 0) {
             return true;
@@ -125,14 +125,14 @@ public class Page_Booking extends Page {
         for (Court court : selectedCourts) {
             if (!isCourtAvailable(court, startTime, endTime)) {
                 JOptionPane.showMessageDialog(gui, "This court is not available within your chosen timeframe " + court.getCourtNum() + "Please view court availabilities on the home page before trying again.");
-                break;
+                return false;
             }
         }
         return true;
     }
 
     
-    private boolean isCourtAvailable(Court court, int startTime, int endTime) {
+    public boolean isCourtAvailable(Court court, int startTime, int endTime) {
         for (Booking booking : bookingsList) {
             HashSet<Court> courtsSet = booking.getCourtsBookedSet();
             int bookingStartTime = booking.getStartTime();
@@ -199,5 +199,6 @@ public class Page_Booking extends Page {
         gui.dispose();
         AppQuitter.exitApplication();
     }
+    
 }
     

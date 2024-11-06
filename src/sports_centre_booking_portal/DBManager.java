@@ -289,7 +289,7 @@ public class DBManager {
                 pstmt.setDouble(6, u.getAccBalance());
                 pstmt.setString(7, u.getUserTypeAsString());
                 pstmt.executeUpdate();
-                System.out.println("Username: " + u.getUsername() + ", Balance: " + u.getAccBalance());
+              
             }
 
             pstmt.close();

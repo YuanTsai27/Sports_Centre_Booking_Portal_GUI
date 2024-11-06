@@ -1,2 +1,0 @@
-hgr4945 1 Yuan Tsai secretpassword 50.0 ADMIN
-testuser 2 Jane Doe password123 1000.0 MEMBER

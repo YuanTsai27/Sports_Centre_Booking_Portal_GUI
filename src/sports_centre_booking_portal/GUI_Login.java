@@ -34,6 +34,7 @@ public class GUI_Login extends JFrame {
     private JButton resetButton;
     private JButton registerButton;
     private JButton quitButton;
+    private JButton resetDatabaseButton;
 
     public GUI_Login(Page_Login pageLogin) {
         this.pageLogin = pageLogin;
@@ -48,7 +49,7 @@ public class GUI_Login extends JFrame {
         this.setLocationRelativeTo(null);
 
         // GUI components set up
-        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(6, 2, 10, 10));
 
         //username text field
         panel.add(new JLabel("Username"));
@@ -69,6 +70,8 @@ public class GUI_Login extends JFrame {
         panel.add(registerButton);
         quitButton = new JButton("Quit");
         panel.add(quitButton);
+        resetDatabaseButton = new JButton("Reset Database");
+        panel.add(resetDatabaseButton);
 
         add(panel);
 
@@ -104,17 +107,24 @@ public class GUI_Login extends JFrame {
                 handleQuit();
             }
         });
-        
+
+        resetDatabaseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleResetDatabase();
+            }
+        });
+
         // Set default close operation and add window listener
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 int result = JOptionPane.showConfirmDialog(
-                    GUI_Login.this,
-                    "Are you sure you want to exit the application?",
-                    "Exit Application",
-                    JOptionPane.YES_NO_OPTION
+                        GUI_Login.this,
+                        "Are you sure you want to exit the application?",
+                        "Exit Application",
+                        JOptionPane.YES_NO_OPTION
                 );
                 if (result == JOptionPane.YES_OPTION) {
                     pageLogin.Quit();
@@ -138,15 +148,27 @@ public class GUI_Login extends JFrame {
         }
 
     }
-    
+
     /*
     private void handleTransitionToHome(){
         pageLogin.transitionHome();
     }
-*/
-
+     */
     private void handleQuit() {
         pageLogin.Quit();
+    }
+
+    private void handleResetDatabase() {
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to reset the database to factory settings?", "Confirm Reset", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                pageLogin.resetDatabase();
+                JOptionPane.showMessageDialog(this, "Database has been reset to factory settings.");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error resetting database: " + e.getMessage());
+            }
+        }
     }
 
     private void handleReset() {

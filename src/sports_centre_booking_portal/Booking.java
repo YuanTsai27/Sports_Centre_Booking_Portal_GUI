@@ -60,6 +60,10 @@ public class Booking {
         nextBookingID++;
         return next;
     }
+    
+    public static void resetBookingID() {
+        nextBookingID = 1;
+    }
    
 
 public int getUserID() {
