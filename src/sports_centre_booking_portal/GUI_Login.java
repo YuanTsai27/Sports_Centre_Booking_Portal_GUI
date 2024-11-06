@@ -7,6 +7,8 @@ package sports_centre_booking_portal;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +44,7 @@ public class GUI_Login extends JFrame {
 
         setTitle("Sports Centre Booking Portal - Login Page");
         setSize(600, 400);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        //this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
         // GUI components set up
@@ -102,6 +104,23 @@ public class GUI_Login extends JFrame {
                 handleQuit();
             }
         });
+        
+        // Set default close operation and add window listener
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int result = JOptionPane.showConfirmDialog(
+                    GUI_Login.this,
+                    "Are you sure you want to exit the application?",
+                    "Exit Application",
+                    JOptionPane.YES_NO_OPTION
+                );
+                if (result == JOptionPane.YES_OPTION) {
+                    pageLogin.Quit();
+                }
+            }
+        });
 
     }
 
@@ -109,20 +128,22 @@ public class GUI_Login extends JFrame {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
-        boolean loginSuccess = pageLogin.Login(username, password);
+        User userToLogin = pageLogin.Login(username, password);
 
-        if (!loginSuccess) {
+        if (userToLogin == null) {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
         } else {
-            pageLogin.transitionHome();
+            pageLogin.transitionHome(userToLogin);
             handleReset();
         }
 
     }
     
+    /*
     private void handleTransitionToHome(){
         pageLogin.transitionHome();
     }
+*/
 
     private void handleQuit() {
         pageLogin.Quit();

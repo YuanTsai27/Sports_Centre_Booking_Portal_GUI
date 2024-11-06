@@ -27,7 +27,7 @@ public class DBManager {
     public DBManager() {
         establishConnection();
         
-        //check if tables already exist firesultSett, if not, create tables.
+        //check if tables already exist first, if not, create tables.
         CreateTables();
     }
 
@@ -52,11 +52,11 @@ public class DBManager {
         try {
             DatabaseMetaData dbm = conn.getMetaData();
 
-            // check firesultSett if useresultSet table exists, if not create it
+            // check first if usersSet table exists, if not create it
             ResultSet tables = dbm.getTables(null, null, "USERS", null);
             if (!tables.next()) {
-                Statement useresultSetStatement = conn.createStatement();
-                String createUseresultSetTable = "CREATE TABLE USERS ("
+                Statement userStatement = conn.createStatement();
+                String createUserSetTable = "CREATE TABLE USERS ("
                         + "USERNAME VARCHAR(255) PRIMARY KEY, "
                         + "ID INT, "
                         + "FIRSTNAME VARCHAR(255), "
@@ -64,24 +64,23 @@ public class DBManager {
                         + "PASSWORD VARCHAR(255), "
                         + "ACCBALANCE DOUBLE, "
                         + "USERTYPE VARCHAR(50))";
-                useresultSetStatement.executeUpdate(createUseresultSetTable);
-                useresultSetStatement.close();
+                userStatement.executeUpdate(createUserSetTable);
+                userStatement.close();
             }
 
-            // check firesultSett if courts table exists, if not create it
+            // check first if courts table exists, if not create it
             tables = dbm.getTables(null, null, "COURTS", null);
             if (!tables.next()) {
-                Statement courtsStatement = conn.createStatement();
+                Statement courtStatement = conn.createStatement();
                 String createCourtsTable = "CREATE TABLE COURTS ("
                         + "COURTNUM INT PRIMARY KEY, "
-                        + "BASEPRICE DOUBLE, "
-                        ;
-                courtsStatement.executeUpdate(createCourtsTable);
-                courtsStatement.close();
+                        + "BASEPRICE DOUBLE) ";
+                courtStatement.executeUpdate(createCourtsTable);
+                courtStatement.close();
             } else {
             }
 
-            // check firesultSett if bookings table exists, if not create it
+            // check first if bookings table exists, if not create it
             tables = dbm.getTables(null, null, "BOOKINGS", null);
             if (!tables.next()) {
                 Statement bookingsStatement = conn.createStatement();
@@ -96,14 +95,14 @@ public class DBManager {
                 bookingsStatement.close();
             }
 
-            // Similarly for BOOKINGCOURTS table
-            tables = dbm.getTables(null, null, "BOOKINGCOURTS", null);
+            // Similarly for BOOKINGS_FOR_EACH_COURT table
+            tables = dbm.getTables(null, null, "BOOKINGS_FOR_EACH_COURT", null);
             if (!tables.next()) {
                 Statement statement = conn.createStatement();
-                String createBookingCourtsTable = "CREATE TABLE BOOKINGCOURTS ("
+                String createBookingsForEachCourtTable = "CREATE TABLE BOOKINGS_FOR_EACH_COURT ("
                         + "BOOKINGID INT, "
                         + "COURTNUM INT)";
-                statement.executeUpdate(createBookingCourtsTable);
+                statement.executeUpdate(createBookingsForEachCourtTable);
                 statement.close();
             }
 
@@ -126,14 +125,14 @@ public class DBManager {
             while (resultSet.next()) {
                 String username = resultSet.getString("USERNAME");
                 int id = resultSet.getInt("ID");
-                String firesultSettName = resultSet.getString("FIRSTNAME");
+                String firstName = resultSet.getString("FIRSTNAME");
                 String lastName = resultSet.getString("LASTNAME");
                 String password = resultSet.getString("PASSWORD");
                 double accBalance = resultSet.getDouble("ACCBALANCE");
                 String userType = resultSet.getString("USERTYPE");
 
                 // Factory pattern
-                User user = UserFactory.getUser(userType, username, id, firesultSettName, lastName, password, accBalance);
+                User user = UserFactory.getUser(userType, username, id, firstName, lastName, password, accBalance);
 
                 users.add(user);
 
@@ -211,10 +210,10 @@ public class DBManager {
                 Booking booking = new Booking(bookingID, userID, user, startTime, endTime, price);
 
                 // Now, get the courts booked for this booking
-                String courtsQuery = "SELECT COURTNUM FROM BOOKINGCOURTS WHERE BOOKINGID = ?";
-                PreparedStatement pstatement = conn.prepareStatement(courtsQuery);
-                pstatement.setInt(1, bookingID);
-                ResultSet courtsRs = pstatement.executeQuery();
+                String courtsQuery = "SELECT COURTNUM FROM BOOKINGS_FOR_EACH_COURT WHERE BOOKINGID = ?";
+                PreparedStatement pstmt = conn.prepareStatement(courtsQuery);
+                pstmt.setInt(1, bookingID);
+                ResultSet courtsRs = pstmt.executeQuery();
 
                 while (courtsRs.next()) {
                     int courtNum = courtsRs.getInt("COURTNUM");
@@ -234,7 +233,7 @@ public class DBManager {
                 }
 
                 courtsRs.close();
-                pstatement.close();
+                pstmt.close();
 
                 bookingsList.add(booking);
                 if (user != null) {
@@ -260,7 +259,7 @@ public class DBManager {
 
     public void saveUsers(ArrayList<User> userList) throws IOException {
         try {
-            // Delete all existing useresultSet
+            // Delete all existing usersSet
             String deleteQuery = "DELETE FROM USERS";
             Statement statement = conn.createStatement();
             statement.executeUpdate(deleteQuery);
@@ -268,20 +267,22 @@ public class DBManager {
 
             // insert all users into database
             String insertQuery = "INSERT INTO USERS (USERNAME, ID, FIRSTNAME, LASTNAME, PASSWORD, ACCBALANCE, USERTYPE) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement pstatement = conn.prepareStatement(insertQuery);
+            PreparedStatement pstmt = conn.prepareStatement(insertQuery);
 
+           
             for (User u : userList) {
-                pstatement.setString(1, u.getUsername());
-                pstatement.setInt(2, u.getId());
-                pstatement.setString(3, u.getFirstName());
-                pstatement.setString(4, u.getLastName());
-                pstatement.setString(5, u.getPassword());
-                pstatement.setDouble(6, u.getAccBalance());
-                pstatement.setString(7, u.getUserTypeAsString());
-                pstatement.executeUpdate();
+                pstmt.setString(1, u.getUsername());
+                pstmt.setInt(2, u.getId());
+                pstmt.setString(3, u.getFirstName());
+                pstmt.setString(4, u.getLastName());
+                pstmt.setString(5, u.getPassword());
+                pstmt.setDouble(6, u.getAccBalance());
+                pstmt.setString(7, u.getUserTypeAsString());
+                pstmt.executeUpdate();
+                System.out.println("Username: " + u.getUsername() + ", Balance: " + u.getAccBalance());
             }
 
-            pstatement.close();
+            pstmt.close();
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -299,15 +300,15 @@ public class DBManager {
 
             // Insert courts
             String insertQuery = "INSERT INTO COURTS (COURTNUM, BASEPRICE) VALUES (?, ?)";
-            PreparedStatement pstatement = conn.prepareStatement(insertQuery);
+            PreparedStatement pstmt = conn.prepareStatement(insertQuery);
 
             for (Court c : courtsList) {
-                pstatement.setInt(1, c.getCourtNum());
-                pstatement.setDouble(2, c.getBasePrice());
-                pstatement.executeUpdate();
+                pstmt.setInt(1, c.getCourtNum());
+                pstmt.setDouble(2, c.getBasePrice());
+                pstmt.executeUpdate();
             }
 
-            pstatement.close();
+            pstmt.close();
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -323,16 +324,16 @@ public class DBManager {
             statement.executeUpdate(deleteBookingsQuery);
             statement.close();
 
-            String deleteBookingCourtsQuery = "DELETE FROM BOOKINGCOURTS";
+            String deleteBookingsForEachCourtQuery = "DELETE FROM BOOKINGS_FOR_EACH_COURT";
             statement = conn.createStatement();
-            statement.executeUpdate(deleteBookingCourtsQuery);
+            statement.executeUpdate(deleteBookingsForEachCourtQuery);
             statement.close();
 
             // Insert bookings
             String insertBookingQuery = "INSERT INTO BOOKINGS (BOOKINGID, USERID, USERNAME, STARTTIME, ENDTIME, PRICE) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement bookingPstatement = conn.prepareStatement(insertBookingQuery);
 
-            String insertBookingCourtQuery = "INSERT INTO BOOKINGCOURTS (BOOKINGID, COURTNUM) VALUES (?, ?)";
+            String insertBookingCourtQuery = "INSERT INTO BOOKINGS_FOR_EACH_COURT (BOOKINGID, COURTNUM) VALUES (?, ?)";
             PreparedStatement bookingCourtPstatement = conn.prepareStatement(insertBookingCourtQuery);
 
             for (Booking b : bookingsList) {
@@ -344,7 +345,7 @@ public class DBManager {
                 bookingPstatement.setDouble(6, b.getPrice());
                 bookingPstatement.executeUpdate();
 
-                // Insert into BOOKINGCOURTS table
+                // Insert into BOOKINGS_FOR_EACH_COURT table
                 HashSet<Court> courts = b.getCourtsBookedSet();
                 for (Court c : courts) {
                     bookingCourtPstatement.setInt(1, b.getBookingID());

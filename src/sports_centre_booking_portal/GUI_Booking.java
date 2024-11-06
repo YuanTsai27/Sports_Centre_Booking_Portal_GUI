@@ -7,6 +7,8 @@ package sports_centre_booking_portal;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,7 +41,7 @@ public class GUI_Booking extends JFrame {
     private void setUpGUI() {
         setTitle("Sports Centre Booking - Make a Booking");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
         setLayout(new GridLayout(10, 2, 10, 10));
@@ -100,6 +102,23 @@ public class GUI_Booking extends JFrame {
             }
         });
         add(returnHomeButton);
+        
+        // Set default close operation and add window listener
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int result = JOptionPane.showConfirmDialog(
+                    GUI_Booking.this,
+                    "Are you sure you want to exit the application?",
+                    "Exit Application",
+                    JOptionPane.YES_NO_OPTION
+                );
+                if (result == JOptionPane.YES_OPTION) {
+                    pageBooking.Quit();
+                }
+            }
+        });
 
     }
 
@@ -151,7 +170,7 @@ public class GUI_Booking extends JFrame {
     }
 
     public void updateTotalPrice(double price) {
-        priceLabel.setText("Total Price: $" + price);
+        priceLabel.setText("$" + price);
     }
 
     private void checkTotalPrice() {

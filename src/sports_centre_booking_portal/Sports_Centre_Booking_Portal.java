@@ -65,10 +65,12 @@ public class Sports_Centre_Booking_Portal {
         // start the app's page navigator.
         pageNavigator.start();
 
+        /*
         // save users, booked courts, and bookings before exiting app.
         dbManager.saveBookings(bookingsList);
         dbManager.saveCourts(courtsList);
         dbManager.saveUsers(usersList);
+*/
 
     }
 

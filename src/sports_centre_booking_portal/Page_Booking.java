@@ -200,6 +200,14 @@ public class Page_Booking extends Page {
         return 0.0;
     }
 }
+    
+    public void Quit() {
+        // gui.setVisible(false);
+
+        gui.dispose();
+        pageNav.exitApplication();
+    }
+    
     /*
     private Court isValidCourt(String courtNum) {
 

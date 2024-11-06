@@ -7,12 +7,15 @@ package sports_centre_booking_portal;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 /**
@@ -39,7 +42,7 @@ public class GUI_Home extends JFrame {
     private void setupUI() {
         setTitle("Sports Centre Booking Portal - Home");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);  
 
         setLayout(new GridLayout(6, 1, 10, 10));
@@ -98,6 +101,23 @@ public class GUI_Home extends JFrame {
             }
         });
         add(logoutButton);
+        
+        // Set default close operation and add window listener
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int result = JOptionPane.showConfirmDialog(
+                    GUI_Home.this,
+                    "Are you sure you want to exit the application?",
+                    "Exit Application",
+                    JOptionPane.YES_NO_OPTION
+                );
+                if (result == JOptionPane.YES_OPTION) {
+                    pageHome.Quit();
+                }
+            }
+        });
     }
 
     public void displayWelcomeMessage(String userName, double balance) {

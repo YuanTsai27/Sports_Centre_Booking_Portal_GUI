@@ -76,6 +76,13 @@ public class Page_Home extends Page {
                 currentUser.topUpBalance(amount);
                 JOptionPane.showMessageDialog(gui, "Successfully topped up $" + amount);
                 gui.displayWelcomeMessage(currentUser.getFirstName() + " " + currentUser.getLastName(), currentUser.getAccBalance());
+                // Verify the update
+            System.out.println("Updated balance in usersList:");
+            for (User user : usersList) {
+                if (user.getUsername().equals(currentUser.getUsername())) {
+                    System.out.println("Username: " + user.getUsername() + ", Balance: " + user.getAccBalance());
+                }
+            }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(gui, "Invalid input. Please enter a valid amount.");
             }
@@ -188,6 +195,13 @@ public class Page_Home extends Page {
         }
 
         JOptionPane.showMessageDialog(gui, availability.toString(), "Court Availability", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void Quit() {
+        // gui.setVisible(false);
+
+        gui.dispose();
+        pageNav.exitApplication();
     }
 
     /*
