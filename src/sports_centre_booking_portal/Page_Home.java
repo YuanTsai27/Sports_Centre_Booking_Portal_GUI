@@ -14,11 +14,9 @@ import javax.swing.JOptionPane;
  */
 public class Page_Home extends Page {
 
-    private GUI_Home gui;
+    private final GUI_Home gui;
     private User currentUser;
-    //private boolean logout;
-    //private boolean navigateBook;
-    private PageNavigator pageNav;
+    private final PageNavigator pageNav;
 
     public Page_Home(PageNavigator pageNav) {
         super();
@@ -29,8 +27,6 @@ public class Page_Home extends Page {
 
     public void main(User currentUser) {
         this.currentUser = currentUser;
-        //logout = false;
-       // navigateBook = false;
 
         // update GUI with user's info
         gui.displayWelcomeMessage(currentUser.getFirstName() + " " + currentUser.getLastName(), currentUser.getAccBalance());
@@ -38,32 +34,16 @@ public class Page_Home extends Page {
         // show GUI upon login page activation.
         gui.setVisible(true);
 
-        /*
-        while (gui.isVisible()) {
-            if (logout) {
-                return "x";
-            } else if (navigateBook) {
-                return "book";
-            }
-
-        }
-        // if GUI closed manually
-        return "x";
-        */
-
     }
 
     public void logOut() throws IOException {
-        //logout = true;
-        //gui.setVisible(false);
-        
+       
         gui.dispose(); // close the home GUI
         pageNav.showLoginPage();
     }
 
     public void book() {
-        //navigateBook = true;
-        //gui.setVisible(false);
+
         gui.dispose(); // close the home GUI
         pageNav.showBookingPage(currentUser);
     }
@@ -118,7 +98,7 @@ public class Page_Home extends Page {
 
         int hour = time / 100;
         int minutes = time % 100;
-        String period = " ";
+        String period;
 
         // Set AM or PM
         if (hour < 12) {
@@ -198,110 +178,7 @@ public class Page_Home extends Page {
     }
     
     public void Quit() {
-        // gui.setVisible(false);
-
         gui.dispose();
-        pageNav.exitApplication();
+        AppQuitter.exitApplication();
     }
-
-    /*
-    public String main(User currentUser) {
-
-        cui.pageWelcome();
-
-        String response = null;
-        boolean validInput = true;
-
-        while (true) {
-
-            if (validInput) {
-                response = (cui.askAction(currentUser)).toLowerCase(); // do not display again if user entered invalid input previously.
-                validInput = true;
-            }
-
-            if (response.equals("book")) {
-                return "book";
-            } else if (response.equals("x")) {
-                return "x";
-            } else if (response.equals("top_up")) {
-                TopUp(currentUser);
-                validInput = true;
-            } else if (response.equals("view_bookings")) {
-                cui.displayBookings(currentUser);
-                validInput = true;
-            } else if (response.startsWith("view ")) {
-                String[] parts = response.split(" ");
-                if (parts.length == 2) {
-                    try {
-                        int courtNumber = Integer.parseInt(parts[1]);
-                        viewCourtAvailability(courtNumber);
-                        validInput = true;
-                    } catch (NumberFormatException e) {
-                        cui.invalidInput(); // invalid court number
-                        validInput = false;
-                    }
-                } else {
-                    cui.invalidInput(); // invalid format
-                    validInput = false;
-                }
-            } else {
-                validInput = false;
-                response = cui.promptTryAgain(); // invalid option, prompt a new response to try again
-            }
-        }
-    }
-
-    public void viewCourtAvailability(int courtNumInput) {
-        Court court = null;
-
-        // check that a court with the number input exists. 
-        for (Court c : courtsList) {
-            if (courtNumInput == c.getCourtNum()) {
-                court = c;
-                break;
-            }
-        }
-        if (court == null){
-            cui.invalidCourtNumber(courtNumInput);
-            return;
-        }
-        
-        // temporary array list to store all bookings for the respective court
-        ArrayList<Booking> courtBookings = new ArrayList<>();
-        for (Booking booking : bookingsList) {
-            if (booking.getCourtsBookedSet().contains(court)) {
-                courtBookings.add(booking);
-            }
-        }
-        
-        cui.displayCourtAvailability(court, courtBookings, openTime, closeTime, minTimeIncrement);
-        
-    }
-
-    public void TopUp(User currentUser) {
-
-        while (true) {
-
-            String amountString = cui.askTopUp();
-
-            if (amountString.equalsIgnoreCase("x")) {
-                cui.cancelledTopUp(currentUser); // inform user of cancelled top up
-                return;// return without topping up
-            }
-
-            try {
-                double amount = Double.parseDouble(amountString);
-
-                currentUser.topUpBalance(amount);
-                cui.successfulTopUp(amount, currentUser);
-                return;
-
-            } catch (NumberFormatException e) {
-                cui.invalidInput(); // inform user of invalid input when parsing to double fails
-                // then return to start of while loop
-            }
-
-        }
-    }
-     */
 }

@@ -22,7 +22,7 @@ import javax.swing.JTextField;
  */
 public class GUI_Booking extends JFrame {
 
-    private Page_Booking pageBooking; // link a Page_Booking instance upon initialisation
+    private final Page_Booking pageBooking; // link a Page_Booking instance upon initialisation
 
     private JTextField courtField;
     private JTextField startTimeField;
@@ -41,7 +41,6 @@ public class GUI_Booking extends JFrame {
     private void setUpGUI() {
         setTitle("Sports Centre Booking - Make a Booking");
         setSize(600, 400);
-        //setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
         setLayout(new GridLayout(10, 2, 10, 10));
@@ -103,7 +102,7 @@ public class GUI_Booking extends JFrame {
         });
         add(returnHomeButton);
         
-        // Set default close operation and add window listener
+        // set default close operation and add window listener
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override

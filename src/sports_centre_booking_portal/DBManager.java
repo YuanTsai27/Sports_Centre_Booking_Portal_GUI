@@ -18,17 +18,27 @@ import java.util.HashSet;
  */
 public class DBManager {
     // exclusively handles reading and loading data from/to the database.
+    
+    private static DBManager instance; // Singleton instance
 
     private Connection conn;
     private static final String url = "jdbc:derby://localhost:1527/SportsCentreBookingPortal_DB";
     private static final String username = "YuanTsai";
     private static final String password = "YuanTsai";
 
-    public DBManager() {
+    private DBManager() {
         establishConnection();
         
         //check if tables already exist first, if not, create tables.
         CreateTables();
+    }
+    
+    // Static method to get the single instance of DBManager (Singleton Factory)
+    public static synchronized DBManager getInstance() {
+        if (instance == null) {
+            instance = new DBManager();
+        }
+        return instance;
     }
 
     public Connection getConnection() {

@@ -12,9 +12,9 @@ import java.io.IOException;
  */
 public class Page_Login extends Page {
 
-    private GUI_Login gui;
+    private final GUI_Login gui;
     //private boolean transitionToHome;
-    private PageNavigator pageNav;
+    private final PageNavigator pageNav;
 
     public Page_Login(PageNavigator pageNav) {
         super();
@@ -23,55 +23,20 @@ public class Page_Login extends Page {
     }
 
     public void main() throws IOException {
-        //transitionToHome = false;
-        //userToLogin = null;
-
-        // show GUI upon login page activation.
         gui.setVisible(true);
-
-        /*
-        while (gui.isVisible()) {
-            if (userToLogin != null) {
-                //gui.setVisible(false);
-                return userToLogin;
-            }
-        }
-
-        if (transitionToHome) {
-            return userToLogin;
-        }
-
-        // if GUI closed without loggin in
-        return null;
-        */
     }
 
     public void transitionHome(User userToLogin) {
-        //gui.setVisible(false);
-        //transitionToHome = true;
         gui.dispose(); // close the login GUI
         pageNav.showHomePage(userToLogin);
     }
 
     public void Quit() {
-        // gui.setVisible(false);
-
         gui.dispose();
-        pageNav.exitApplication();
+        AppQuitter.exitApplication();
     }
     
-    /*
-    public User getUserToLogin(){
-        return userToLogin;
-    }
-    */
-
-    /*
-    public boolean getExitFlag(){
-        return exit;
-    }
-     */
-    public User Login(String username, String password) {
+     public User Login(String username, String password) {
 
         for (User user : usersList) {
             if (user.getUsername().equalsIgnoreCase(username) && user.getPassword().equals(password)) {
@@ -82,15 +47,7 @@ public class Page_Login extends Page {
         return null;
     }
     
-    private User findUserWithUsername(String username) {
-        for (User user : usersList) {
-            if (user.getUsername().equals(username)) {
-                return user; // Return the User object from usersList
-            }
-        }
-        return null; // User not found
-    }
-
+   
     public boolean Register(String newUsername, String firstName, String lastName, String newPassword) throws IOException {
 
         // check if the username already exists

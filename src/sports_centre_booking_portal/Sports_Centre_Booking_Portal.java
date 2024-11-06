@@ -14,25 +14,20 @@ import javax.swing.SwingUtilities;
  */
 public class Sports_Centre_Booking_Portal {
 
-    private DBManager dbManager;
-    private PageNavigator pageNavigator;
+    private final DBManager dbManager;
+    private final PageNavigator pageNavigator;
 
-    private ArrayList<User> usersList; // using arraylist for its ordered characteristic
-    private ArrayList<Court> courtsList;
-    private ArrayList<Booking> bookingsList;
-
-    private boolean exit;
+    private final ArrayList<User> usersList; // using arraylist for its ordered characteristic
+    private final ArrayList<Court> courtsList;
+    private final ArrayList<Booking> bookingsList;
 
     public Sports_Centre_Booking_Portal() {
-        this.dbManager = new DBManager();
-        this.pageNavigator = new PageNavigator();
+        this.dbManager = DBManager.getInstance();
+        this.pageNavigator = PageNavigator.getInstance();
 
         this.usersList = new ArrayList<>();
         this.courtsList = new ArrayList<>();
         this.bookingsList = new ArrayList<>();
-
-        exit = false;
-
     }
 
     /**
@@ -62,15 +57,8 @@ public class Sports_Centre_Booking_Portal {
         Page.setArrayLists(usersList, courtsList, bookingsList);
         Page.setDBManager(dbManager);
 
-        // start the app's page navigator.
+        // start the app's page navigator. exit process occurs in this class.
         pageNavigator.start();
-
-        /*
-        // save users, booked courts, and bookings before exiting app.
-        dbManager.saveBookings(bookingsList);
-        dbManager.saveCourts(courtsList);
-        dbManager.saveUsers(usersList);
-*/
 
     }
 

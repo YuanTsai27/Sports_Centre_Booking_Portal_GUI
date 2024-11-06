@@ -24,7 +24,7 @@ import javax.swing.SwingConstants;
  */
 public class GUI_Home extends JFrame {
     
-    private Page_Home pageHome; //link a Page_Booking instance upon initialisation
+    private final Page_Home pageHome; //link a Page_Booking instance upon initialisation
     
     private JLabel welcomeLabel;
     private JLabel balanceLabel;
@@ -42,7 +42,6 @@ public class GUI_Home extends JFrame {
     private void setupUI() {
         setTitle("Sports Centre Booking Portal - Home");
         setSize(600, 400);
-        //setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);  
 
         setLayout(new GridLayout(6, 1, 10, 10));

@@ -26,7 +26,7 @@ import javax.swing.JTextField;
  */
 public class GUI_Login extends JFrame {
 
-    private Page_Login pageLogin; // link a Page_Login instance upon initialisation
+    private final Page_Login pageLogin; // link a Page_Login instance upon initialisation
 
     private JTextField usernameField;
     private JPasswordField passwordField;

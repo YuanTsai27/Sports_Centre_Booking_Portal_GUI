@@ -45,6 +45,18 @@ public class Page {
         Page.bookingsList = bookingsList;
     }
     
+    public static ArrayList<User> getUsersList() {
+        return usersList;
+    }
+
+    public static ArrayList<Court> getCourtsList() {
+        return courtsList;
+    }
+
+    public static ArrayList<Booking> getBookingsList() {
+        return bookingsList;
+    }
+    
     public static void setDBManager(DBManager dbManager){
         Page.dbManager = dbManager;
     }

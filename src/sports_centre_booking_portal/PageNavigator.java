@@ -13,17 +13,25 @@ import java.io.IOException;
 public class PageNavigator extends Page {
     // class that exclusively handles transitioning the user's interface from one page to another (login page, home page, booking page)
 
+    private static PageNavigator instance; // Singleton instance
+    
     private Page_Booking bookingPage;
     private Page_Home homePage;
     private Page_Login loginPage;
-    private boolean exit;
 
-    public PageNavigator() {
+    private PageNavigator() {
         super();
         this.bookingPage = new Page_Booking(this);
         this.homePage = new Page_Home(this);
         this.loginPage = new Page_Login(this);
-        this.exit = false;
+    }
+    
+    // Static method to get the single instance of PageNavigator (Singleton Factory)
+    public static synchronized PageNavigator getInstance() {
+        if (instance == null) {
+            instance = new PageNavigator();
+        }
+        return instance;
     }
 
     public void start() throws IOException {
@@ -44,17 +52,5 @@ public class PageNavigator extends Page {
     public void showBookingPage(User user) {
         currentUser = user;
         bookingPage.main(currentUser);
-    }
-
-    public void exitApplication() {
-        try {
-            // Save data before exiting
-            dbManager.saveBookings(bookingsList);
-            dbManager.saveCourts(courtsList);
-            dbManager.saveUsers(usersList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.exit(0);
     }
 }
