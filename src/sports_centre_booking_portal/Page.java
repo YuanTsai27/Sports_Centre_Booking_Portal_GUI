@@ -17,7 +17,7 @@ public class Page {
     protected static ArrayList<Booking> bookingsList;
             
     protected User currentUser = null;
-    protected static FileManager fileManager;
+    protected static DBManager dbManager;
     
     // times in 24 hour format
     protected static int openTime; 
@@ -45,8 +45,8 @@ public class Page {
         Page.bookingsList = bookingsList;
     }
     
-    public static void setFileManager(FileManager fileManager){
-        Page.fileManager = fileManager;
+    public static void setDBManager(DBManager dbManager){
+        Page.dbManager = dbManager;
     }
    
 }

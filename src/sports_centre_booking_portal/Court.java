@@ -10,22 +10,17 @@ package sports_centre_booking_portal;
  */
 public class Court {
     private final int courtNum;
-    private int[] position; // Integer vector for the court's 2D position. 
     private double basePrice;
 
-    public Court(int courtNum, double basePrice, int [] position) {
+    public Court(int courtNum, double basePrice) {
         this.courtNum = courtNum;
         this.basePrice = basePrice;
-        this.position = position;
     }
 
     public int getCourtNum() {
         return courtNum;
     }
 
-    public int[] getPosition() {
-        return position;
-    }
 
     public double getBasePrice() {
         return basePrice;

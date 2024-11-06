@@ -94,7 +94,7 @@ public class Page_Login extends Page {
         // if username does not already exist, register new user
         User newUser = new User(newUsername, firstName, lastName, newPassword);
         usersList.add(newUser);
-        fileManager.saveUsers(usersList); //add new user into users.txt
+        dbManager.saveUsers(usersList); //add new user into users.txt
 
         return true;
     }

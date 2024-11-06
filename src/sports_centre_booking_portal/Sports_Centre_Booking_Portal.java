@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
  */
 public class Sports_Centre_Booking_Portal {
 
-    private FileManager fileManager;
+    private DBManager dbManager;
     private PageNavigator pageNavigator;
 
     private ArrayList<User> usersList; // using arraylist for its ordered characteristic
@@ -24,7 +24,7 @@ public class Sports_Centre_Booking_Portal {
     private boolean exit;
 
     public Sports_Centre_Booking_Portal() {
-        this.fileManager = new FileManager();
+        this.dbManager = new DBManager();
         this.pageNavigator = new PageNavigator();
 
         this.usersList = new ArrayList<>();
@@ -54,21 +54,21 @@ public class Sports_Centre_Booking_Portal {
 
     public void start() throws IOException {
         // load all saved users, booked courts and bookings into the app
-        fileManager.loadUsers(usersList);
-        fileManager.loadCourts(courtsList);
-        fileManager.loadBookings(bookingsList, courtsList, usersList);
+        dbManager.loadUsers(usersList);
+        dbManager.loadCourts(courtsList);
+        dbManager.loadBookings(bookingsList, courtsList, usersList);
 
         // set static instances for Page class.
         Page.setArrayLists(usersList, courtsList, bookingsList);
-        Page.setFileManager(fileManager);
+        Page.setDBManager(dbManager);
 
         // start the app's page navigator.
         pageNavigator.start();
 
         // save users, booked courts, and bookings before exiting app.
-        fileManager.saveBookings(bookingsList);
-        fileManager.saveCourts(courtsList);
-        fileManager.saveUsers(usersList);
+        dbManager.saveBookings(bookingsList);
+        dbManager.saveCourts(courtsList);
+        dbManager.saveUsers(usersList);
 
     }
 
